@@ -1,90 +1,92 @@
+/* Love & Romance Design System - Premium Wedding Assessment */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Elegant Wedding Assessment - Premium Design System */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 @layer base {
   :root {
-    /* Modern Purple Color Palette */
+    /* Romantic Love Color Palette */
     --background: 0 0% 100%; /* Pure white */
-    --foreground: 260 15% 25%; /* Deep purple-gray */
+    --foreground: 340 30% 25%; /* Deep rose-gray */
 
     --card: 0 0% 100%;
-    --card-foreground: 260 15% 25%;
+    --card-foreground: 340 30% 25%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 260 15% 25%;
+    --popover-foreground: 340 30% 25%;
 
-    /* Primary - Vibrant Purple */
-    --primary: 270 91% 65%; /* Vibrant purple */
+    /* Primary - Romantic Rose */
+    --primary: 340 82% 62%; /* Romantic rose pink */
     --primary-foreground: 0 0% 100%;
-    --primary-light: 270 100% 85%;
-    --primary-lighter: 270 100% 95%;
-    
-    /* Masculine - Deep Indigo */
-    --masculine: 240 60% 35%; /* Deep indigo */
-    --masculine-light: 240 30% 85%;
+    --primary-light: 340 100% 85%;
+    --primary-lighter: 340 100% 95%;
+
+    /* Masculine - Deep Burgundy */
+    --masculine: 350 65% 45%; /* Rich burgundy */
+    --masculine-light: 350 50% 85%;
     --masculine-foreground: 0 0% 100%;
 
-    /* Feminine - Soft Lavender */
-    --feminine: 300 40% 75%; /* Elegant lavender */
-    --feminine-light: 300 25% 95%;
-    --feminine-foreground: 260 15% 25%;
-    --feminine-soft: 300 15% 98%;
+    /* Feminine - Soft Blush */
+    --feminine: 345 100% 75%; /* Soft blush pink */
+    --feminine-light: 345 100% 95%;
+    --feminine-foreground: 340 30% 25%;
+    --feminine-soft: 345 70% 98%;
 
-    --secondary: 220 13% 91%; /* Light grey */
-    --secondary-foreground: 215 25% 27%;
+    --secondary: 340 20% 93%; /* Soft rose-grey */
+    --secondary-foreground: 340 25% 30%;
 
-    --muted: 210 40% 96%; /* Very light blue-grey */
-    --muted-foreground: 215 16% 47%;
+    --muted: 340 30% 96%; /* Very light rose */
+    --muted-foreground: 340 16% 47%;
 
-    --accent: 285 85% 60%; /* Rich violet */
+    --accent: 335 75% 60%; /* Rose gold */
     --accent-foreground: 0 0% 100%;
 
-    /* Premium Status Colors */
-    --success: 142 69% 58%; /* Emerald green */
+    /* Romantic Status Colors */
+    --success: 150 60% 55%; /* Soft emerald (love growing) */
     --success-foreground: 0 0% 100%;
-    --success-light: 142 50% 95%;
+    --success-light: 150 50% 95%;
 
-    --warning: 45 93% 58%; /* Rich amber */
+    --warning: 25 90% 60%; /* Warm coral (needs attention) */
     --warning-foreground: 0 0% 100%;
-    --warning-light: 45 100% 95%;
+    --warning-light: 25 100% 95%;
 
-    --destructive: 0 84% 60%; /* Pure red */
+    --destructive: 0 75% 58%; /* Passionate red */
     --destructive-foreground: 0 0% 100%;
-    --destructive-light: 0 100% 97%;
+    --destructive-light: 0 85% 97%;
 
-    --border: 220 13% 91%; /* Clean grey border */
-    --input: 220 13% 91%;
-    --ring: 270 91% 65%; /* Purple focus ring */
+    --border: 340 20% 91%; /* Soft rose border */
+    --input: 340 20% 91%;
+    --ring: 340 82% 62%; /* Rose pink focus ring */
 
-    /* Assessment Result Colors */
-    --compatibility-green: 142 69% 58%; /* Emerald */
-    --compatibility-yellow: 45 93% 58%; /* Amber */
-    --compatibility-red: 0 84% 60%; /* Red */
-    --compatibility-gray: 215 16% 47%;
+    /* Love Compatibility Colors */
+    --compatibility-green: 150 60% 55%; /* Hearts aligned */
+    --compatibility-yellow: 25 90% 60%; /* Discussion needed */
+    --compatibility-red: 0 75% 58%; /* Priority conversation */
+    --compatibility-gray: 340 16% 47%;
 
-    /* Elegant Purple Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(270 91% 65%) 0%, hsl(300 40% 75%) 50%, hsl(240 60% 35%) 100%); /* Purple to lavender to indigo */
-    --gradient-masculine: linear-gradient(135deg, hsl(240 60% 35%) 0%, hsl(270 91% 65%) 100%); /* Indigo to purple */
-    --gradient-feminine: linear-gradient(135deg, hsl(300 40% 75%) 0%, hsl(270 100% 95%) 100%); /* Lavender to light purple */
-    --gradient-romantic: linear-gradient(135deg, hsl(270 91% 65%) 0%, hsl(300 40% 75%) 100%); /* Purple to lavender */
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(270 40% 98%) 100%); /* White to light purple */
-    --gradient-success: linear-gradient(135deg, hsl(142 69% 58%) 0%, hsl(142 69% 65%) 100%);
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(270 100% 98%) 50%, hsl(0 0% 100%) 100%); /* Premium white */
-    --gradient-overlay: linear-gradient(135deg, hsl(270 91% 65% / 0.1) 0%, hsl(300 40% 75% / 0.05) 100%);
+    /* Romantic Love Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(340 82% 62%) 0%, hsl(350 90% 70%) 30%, hsl(10 95% 75%) 60%, hsl(25 100% 80%) 100%); /* Romantic sunset: rose to coral to peach */
+    --gradient-masculine: linear-gradient(135deg, hsl(350 65% 45%) 0%, hsl(340 82% 62%) 100%); /* Burgundy to rose */
+    --gradient-feminine: linear-gradient(135deg, hsl(345 100% 75%) 0%, hsl(340 100% 95%) 100%); /* Blush to soft pink */
+    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 62%) 0%, hsl(345 100% 75%) 50%, hsl(25 100% 85%) 100%); /* Rose to blush to peach */
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(340 40% 98%) 100%); /* White to soft rose */
+    --gradient-success: linear-gradient(135deg, hsl(150 60% 55%) 0%, hsl(160 65% 60%) 100%); /* Love growing */
+    --gradient-premium: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(340 100% 98%) 50%, hsl(0 0% 100%) 100%); /* Premium romantic white */
+    --gradient-overlay: linear-gradient(135deg, hsl(340 82% 62% / 0.08) 0%, hsl(25 100% 80% / 0.05) 100%); /* Soft romantic overlay */
 
-    /* Refined Purple Shadows */
-    --shadow-card: 0 1px 3px 0 hsl(260 15% 25% / 0.05), 0 1px 2px 0 hsl(260 15% 25% / 0.06);
-    --shadow-lg: 0 10px 15px -3px hsl(260 15% 25% / 0.08), 0 4px 6px -2px hsl(260 15% 25% / 0.03);
-    --shadow-xl: 0 20px 25px -5px hsl(260 15% 25% / 0.08), 0 10px 10px -5px hsl(260 15% 25% / 0.02);
-    --shadow-premium: 0 8px 30px -12px hsl(270 91% 65% / 0.25), 0 2px 8px -2px hsl(260 15% 25% / 0.05);
-    --shadow-glow: 0 0 0 1px hsl(270 91% 65% / 0.2), 0 4px 16px 0 hsl(270 91% 65% / 0.1);
-    --shadow-soft: 0 2px 4px -1px hsl(260 15% 25% / 0.04), 0 1px 2px -1px hsl(260 15% 25% / 0.03);
+    /* Romantic Warm Shadows */
+    --shadow-card: 0 1px 3px 0 hsl(340 30% 25% / 0.06), 0 1px 2px 0 hsl(340 82% 62% / 0.04);
+    --shadow-lg: 0 10px 15px -3px hsl(340 30% 25% / 0.08), 0 4px 6px -2px hsl(340 82% 62% / 0.04);
+    --shadow-xl: 0 20px 25px -5px hsl(340 30% 25% / 0.08), 0 10px 10px -5px hsl(340 82% 62% / 0.03);
+    --shadow-premium: 0 8px 30px -12px hsl(340 82% 62% / 0.3), 0 2px 8px -2px hsl(350 90% 70% / 0.08);
+    --shadow-glow: 0 0 0 1px hsl(340 82% 62% / 0.25), 0 4px 16px 0 hsl(340 82% 62% / 0.15), 0 0 40px 0 hsl(25 100% 80% / 0.1);
+    --shadow-soft: 0 2px 4px -1px hsl(340 30% 25% / 0.04), 0 1px 2px -1px hsl(340 82% 62% / 0.03);
 
     --radius: 0.75rem;
 
@@ -153,10 +155,11 @@
 
   body {
     @apply bg-background text-foreground font-poppins antialiased;
-    background: 
-      radial-gradient(ellipse at top, hsl(270 100% 98%) 0%, transparent 70%),
-      radial-gradient(ellipse at bottom right, hsl(300 25% 98%) 0%, transparent 70%),
-      linear-gradient(to bottom, hsl(0 0% 100%), hsl(270 40% 99%));
+    background:
+      radial-gradient(ellipse at top, hsl(340 100% 98%) 0%, transparent 70%),
+      radial-gradient(ellipse at bottom right, hsl(25 100% 95%) 0%, transparent 70%),
+      radial-gradient(ellipse at bottom left, hsl(345 100% 97%) 0%, transparent 60%),
+      linear-gradient(to bottom, hsl(0 0% 100%), hsl(340 40% 99%));
   }
 
   /* Typography Classes */
@@ -170,6 +173,76 @@
 
   .font-cormorant {
     font-family: 'Cormorant Garamond', serif;
+  }
+
+  .font-great-vibes {
+    font-family: 'Great Vibes', cursive;
+  }
+
+  .font-dancing {
+    font-family: 'Dancing Script', cursive;
+  }
+
+  /* Romantic text styles */
+  .romantic-heading {
+    @apply font-dancing text-primary;
+    text-shadow: 0 2px 8px hsl(340 82% 62% / 0.15);
+  }
+
+  .romantic-title {
+    @apply font-great-vibes text-primary;
+    text-shadow: 0 2px 12px hsl(340 82% 62% / 0.2);
+  }
+
+  /* Heart decorations */
+  .heart-accent::before {
+    content: '♥';
+    color: hsl(var(--primary));
+    margin-right: 0.5rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  .heart-accent::after {
+    content: '♥';
+    color: hsl(var(--primary));
+    margin-left: 0.5rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  .hearts-bg {
+    position: relative;
+  }
+
+  .hearts-bg::before {
+    content: '♥ ♥ ♥';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: hsl(var(--primary) / 0.1);
+    font-size: 2rem;
+    pointer-events: none;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% {
+      transform: scale(1);
+    }
+    25% {
+      transform: scale(1.1);
+    }
+    50% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
 
   /* Smooth animations */

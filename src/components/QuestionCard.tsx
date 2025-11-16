@@ -36,7 +36,7 @@ const RatingScale = ({
 
   return (
     <div className="space-y-3 md:space-y-4">
-      <h4 className="text-lg md:text-xl font-semibold text-foreground font-cormorant mb-2">{title}</h4>
+      <h4 className="text-lg md:text-xl font-semibold text-primary font-dancing mb-2">♥ {title} ♥</h4>
       <div className="space-y-2 md:space-y-3">
         {labels.map((label, index) => (
           <button
@@ -117,14 +117,14 @@ const QuestionCard = ({
         {/* Progress Header */}
         <div className="mb-6 md:mb-10">
           <div className="text-center mb-6 md:mb-8">
-            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full gradient-romantic flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-premium">
-              <span className="text-lg md:text-2xl text-white font-bold">{currentQuestionIndex + 1}</span>
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full gradient-romantic flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-premium animate-pulse">
+              <span className="text-lg md:text-2xl text-white font-bold">💕</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2 md:mb-3 font-cormorant px-4">
+            <h1 className="text-2xl md:text-3xl romantic-heading mb-2 md:mb-3 px-4">
               Question {currentQuestionIndex + 1} of {totalQuestions}
             </h1>
-            <div className="inline-block px-3 py-1 md:px-4 md:py-2 bg-primary/10 rounded-full">
-              <p className="text-primary font-medium text-base md:text-lg">{question.category}</p>
+            <div className="inline-block px-3 py-1 md:px-4 md:py-2 gradient-romantic rounded-full shadow-soft">
+              <p className="text-white font-medium text-base md:text-lg">{question.category}</p>
             </div>
           </div>
           
@@ -191,15 +191,15 @@ const QuestionCard = ({
               <div className="text-center order-first md:order-none">
                 {!bothAnswered && (
                   <div className="px-4 py-2 md:px-6 md:py-3 bg-warning/10 rounded-full">
-                    <p className="text-warning font-medium text-sm md:text-lg">
-                      💡 Select both ratings to continue
+                    <p className="text-warning font-medium text-sm md:text-lg font-dancing">
+                      💕 Select both ratings to continue
                     </p>
                   </div>
                 )}
                 {bothAnswered && (
-                  <div className="px-4 py-2 md:px-6 md:py-3 bg-success/10 rounded-full">
-                    <p className="text-success font-medium text-sm md:text-lg">
-                      ✨ Auto-advancing to next question...
+                  <div className="px-4 py-2 md:px-6 md:py-3 gradient-romantic rounded-full shadow-soft">
+                    <p className="text-white font-medium text-sm md:text-lg font-dancing">
+                      💖 Auto-advancing to next question...
                     </p>
                   </div>
                 )}

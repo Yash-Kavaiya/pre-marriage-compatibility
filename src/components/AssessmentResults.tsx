@@ -87,10 +87,10 @@ const CategorySummary = ({
 
   return (
     <Card className="shadow-romantic gradient-pearl relative overflow-hidden">
-      <div className="absolute top-2 right-2 text-xl opacity-30">🌸</div>
+      <div className="absolute top-2 right-2 text-xl opacity-30">💕</div>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-playfair">{category}</CardTitle>
+          <CardTitle className="text-lg font-dancing text-primary">{category}</CardTitle>
           <Badge 
             className={`
               ${overallScore === 'green' ? 'bg-compatibility-green text-white' : ''}
@@ -144,7 +144,7 @@ const SinglePartnerSummary = ({
     <Card className="shadow-romantic gradient-pearl border-primary relative overflow-hidden">
       <div className="absolute top-4 right-4 text-3xl opacity-20">💝</div>
       <CardHeader>
-        <CardTitle className="text-2xl text-center font-playfair">Quality of Life Analysis for {partner.name}</CardTitle>
+        <CardTitle className="text-2xl text-center romantic-heading">Quality of Life Analysis for {partner.name}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="text-center">
@@ -280,7 +280,7 @@ const OverallSummary = ({
     <Card className="shadow-romantic gradient-pearl border-primary relative overflow-hidden">
       <div className="absolute top-4 right-4 text-4xl opacity-20">💕</div>
       <CardHeader>
-        <CardTitle className="text-2xl text-center font-playfair">Overall Compatibility</CardTitle>
+        <CardTitle className="text-3xl text-center romantic-heading">♥ Overall Compatibility ♥</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="text-center">
@@ -344,14 +344,16 @@ const AssessmentResults = ({
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="mb-6 text-6xl opacity-80">💐</div>
-            <h1 className="text-4xl font-bold text-white mb-4 font-playfair">
-              Marriage Compatibility Results
+            <div className="mb-6 text-6xl opacity-80 animate-pulse">💕</div>
+            <h1 className="text-5xl font-bold mb-4">
+              <span className="romantic-title text-white drop-shadow-lg">
+                Love Compatibility Results
+              </span>
             </h1>
-            <div className="text-2xl font-dancing text-white/95 mb-4">
-              "Love is in the details"
+            <div className="text-3xl font-dancing text-white/95 mb-4">
+              ♥ Love is in the details ♥
             </div>
-            <p className="text-xl text-white/90">
+            <p className="text-xl text-white/90 font-poppins">
               Your comprehensive compatibility analysis
             </p>
           </div>
@@ -383,7 +385,9 @@ const AssessmentResults = ({
           {/* Category Breakdown */}
           {bothCompleted && (
             <div>
-              <h2 className="text-2xl font-bold text-center mb-6 text-white font-playfair">Detailed Analysis by Category</h2>
+              <h2 className="text-3xl romantic-heading text-center mb-6 text-white drop-shadow-lg">
+                Detailed Analysis by Category
+              </h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {assessmentCategories.map(category => (
                   <CategorySummary
