@@ -25,20 +25,21 @@ const AssessmentLanding = ({ onStartAssessment }: AssessmentLandingProps) => {
           {/* Hero Section */}
           <div className="text-center mb-12 md:mb-20">
             <div className="mb-6 md:mb-8 relative inline-block">
-              <div className="w-16 h-16 md:w-24 md:h-24 rounded-full gradient-romantic flex items-center justify-center shadow-premium">
-                <Heart className="w-8 h-8 md:w-12 md:h-12 text-white" />
+              <div className="w-16 h-16 md:w-24 md:h-24 rounded-full gradient-romantic flex items-center justify-center shadow-premium animate-pulse">
+                <Heart className="w-8 h-8 md:w-12 md:h-12 text-white fill-white" />
               </div>
-              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 text-lg md:text-2xl animate-pulse">✨</div>
+              <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 text-lg md:text-2xl animate-pulse">💕</div>
+              <div className="absolute -bottom-1 -left-1 md:-bottom-2 md:-left-2 text-lg md:text-2xl animate-pulse" style={{animationDelay: '0.5s'}}>💕</div>
             </div>
-            <h1 className="text-3xl md:text-6xl font-bold text-foreground mb-4 md:mb-6 font-cormorant leading-tight px-4">
-              Marriage Compatibility
-              <span className="block text-primary">Master Assessment</span>
+            <h1 className="text-3xl md:text-6xl font-bold mb-4 md:mb-6 leading-tight px-4">
+              <span className="font-cormorant text-foreground">Marriage Compatibility</span>
+              <span className="block romantic-title text-4xl md:text-7xl mt-2">Love Assessment</span>
             </h1>
-            <div className="text-lg md:text-2xl font-cormorant italic text-muted-foreground mb-4 md:mb-6 px-4">
-              "Building lasting bonds through understanding"
+            <div className="text-lg md:text-2xl font-dancing text-primary mb-4 md:mb-6 px-4">
+              ♥ Building lasting bonds through understanding ♥
             </div>
             <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
-              Discover your relationship compatibility across 86 carefully crafted questions in 14 essential life areas. 
+              Discover your relationship compatibility across 86 carefully crafted questions in 14 essential life areas.
               Create a stronger foundation for your future together with professional-grade insights.
             </p>
           </div>
@@ -79,7 +80,7 @@ const AssessmentLanding = ({ onStartAssessment }: AssessmentLandingProps) => {
           {/* Assessment Options */}
           <div className="mb-12 md:mb-16 px-4">
             <div className="text-center mb-8 md:mb-12">
-              <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4 font-cormorant">Choose Your Experience</h2>
+              <h2 className="text-2xl md:text-5xl romantic-heading mb-3 md:mb-4">Choose Your Love Journey</h2>
               <p className="text-lg md:text-xl text-muted-foreground">Select your preferred assessment method</p>
             </div>
             
@@ -142,8 +143,8 @@ const AssessmentLanding = ({ onStartAssessment }: AssessmentLandingProps) => {
             </div>
             
             <div className="text-center">
-              <p className="text-muted-foreground text-lg">
-                💡 <em>Both partners complete assessments independently for optimal accuracy</em>
+              <p className="text-muted-foreground text-lg font-dancing">
+                💕 <em>Both partners complete assessments independently for optimal accuracy</em> 💕
               </p>
             </div>
           </div>
@@ -151,7 +152,7 @@ const AssessmentLanding = ({ onStartAssessment }: AssessmentLandingProps) => {
           {/* How It Works */}
           <div className="card-premium p-6 md:p-10 mb-6 md:mb-8 mx-2 md:mx-0">
             <div className="text-center mb-6 md:mb-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground font-cormorant mb-3 md:mb-4">How It Works</h2>
+              <h2 className="text-2xl md:text-4xl romantic-heading mb-3 md:mb-4">How It Works</h2>
               <p className="text-base md:text-xl text-muted-foreground">A sophisticated approach to relationship assessment</p>
             </div>
             
