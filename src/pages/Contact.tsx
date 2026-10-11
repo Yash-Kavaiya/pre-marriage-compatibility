@@ -1,225 +1,134 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Mail, Phone, MapPin, Send } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Link } from 'react-router-dom';
+import { ArrowLeft, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import SiteHeader from '@/components/SiteHeader';
+import { useToast } from '@/hooks/use-toast';
+
+const faqs = [
+  {
+    q: 'How accurate is the assessment?',
+    a: 'It is built around the areas premarital counselors cover most often and measures how much weight each of you gives to each topic. It is a structured starting point for conversation, not a prediction of whether a marriage will succeed.',
+  },
+  {
+    q: 'Where are our answers stored?',
+    a: 'Nowhere on a server. Progress is saved only in your browser, and your answers travel inside the link you send your partner. Links are encoded rather than encrypted, so share them only with each other.',
+  },
+  {
+    q: 'Can we retake it?',
+    a: 'Yes. Many couples retake it after six months or after working with a counselor to see how their answers have moved.',
+  },
+  {
+    q: 'Do you offer counseling?',
+    a: 'We do not provide counseling directly, but we are happy to point you toward qualified premarital counselors who can help with the priority areas in your report.',
+  },
+];
+
+const contactItems = [
+  { icon: Mail, label: 'Email', value: 'support@marriagecompatibility.com' },
+  { icon: Phone, label: 'Phone', value: '+1 (555) 123-4567' },
+  { icon: MapPin, label: 'Office', value: '123 Relationship Street, Harmony City, HC 12345' },
+];
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for contacting us. We'll get back to you soon.",
-      });
+      toast({ title: 'Message sent', description: 'Thank you for getting in touch. We will reply soon.' });
       setFormData({ name: '', email: '', subject: '', message: '' });
     }, 1000);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-romantic">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-white mb-4">Contact Us</h1>
-            <p className="text-xl text-white/90">
-              Have questions about the Marriage Compatibility Assessment? We're here to help.
-            </p>
+    <div className="paper min-h-screen">
+      <SiteHeader
+        right={
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/">
+              <ArrowLeft className="mr-2 h-4 w-4" /> Back to assessment
+            </Link>
+          </Button>
+        }
+      />
+
+      <main className="container max-w-5xl py-14 md:py-20">
+        <p className="eyebrow">Contact</p>
+        <h1 className="mt-3 text-5xl font-semibold text-primary">We are here to help</h1>
+        <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
+          Questions about the assessment, your report, or finding a counselor? Send us a note.
+        </p>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
+          <div className="surface space-y-6 p-6 sm:p-8">
+            {contactItems.map(({ icon: Icon, label, value }) => (
+              <div key={label} className="flex gap-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">{label}</p>
+                  <p className="text-sm text-muted-foreground">{value}</p>
+                </div>
+              </div>
+            ))}
+            <div className="rounded-lg bg-muted p-4 text-sm">
+              <p className="font-semibold">Hours</p>
+              <p className="mt-1 text-muted-foreground">Monday to Friday, 9:00 to 18:00</p>
+              <p className="text-muted-foreground">Saturday, 10:00 to 16:00</p>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Contact Information */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-2xl">Get in Touch</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-masculine rounded-full flex items-center justify-center">
-                    <Mail className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Email</h3>
-                    <p className="text-muted-foreground">support@marriagecompatibility.com</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-feminine rounded-full flex items-center justify-center">
-                    <Phone className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Phone</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 gradient-romantic rounded-full flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Office</h3>
-                    <p className="text-muted-foreground">
-                      123 Relationship Street<br />
-                      Harmony City, HC 12345
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-primary-lighter p-4 rounded-lg">
-                  <h3 className="font-semibold mb-2">Business Hours</h3>
-                  <div className="text-sm space-y-1">
-                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-                    <p>Saturday: 10:00 AM - 4:00 PM</p>
-                    <p>Sunday: Closed</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Contact Form */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-2xl">Send us a Message</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your full name"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email">Email Address</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="subject">Subject</Label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                      placeholder="What's this about?"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      placeholder="Tell us more about your question or feedback..."
-                      rows={5}
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full gradient-romantic"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      "Sending..."
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" />
-                        Send Message
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* FAQ Section */}
-          <Card className="mt-8 shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-2xl">Frequently Asked Questions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h3 className="font-semibold mb-2">How accurate is the compatibility assessment?</h3>
-                <p className="text-muted-foreground">
-                  Our assessment is based on research-backed relationship factors and provides insights 
-                  into key areas of compatibility. It's designed as a discussion starter and planning tool, 
-                  not a definitive predictor of relationship success.
-                </p>
+          <form onSubmit={handleSubmit} className="surface space-y-4 p-6 sm:p-8">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input id="name" name="name" value={formData.name} onChange={handleChange} required autoComplete="name" />
               </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">Is my data kept private?</h3>
-                <p className="text-muted-foreground">
-                  Yes, all assessment data is stored locally on your device and not transmitted to external servers. 
-                  Your privacy is our priority.
-                </p>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" name="email" type="email" value={formData.email} onChange={handleChange} required autoComplete="email" />
               </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">Can I retake the assessment?</h3>
-                <p className="text-muted-foreground">
-                  Absolutely! You can restart the assessment at any time to reflect changes in your priorities 
-                  or to reassess your compatibility.
-                </p>
-              </div>
-
-              <div>
-                <h3 className="font-semibold mb-2">Do you offer relationship counseling?</h3>
-                <p className="text-muted-foreground">
-                  While we don't provide direct counseling services, we can recommend qualified relationship 
-                  counselors in your area who can help you work through any issues identified in your assessment.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subject">Subject</Label>
+              <Input id="subject" name="subject" value={formData.subject} onChange={handleChange} required />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message">Message</Label>
+              <Textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={5} />
+            </div>
+            <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
+              <Send className="mr-2 h-4 w-4" />
+              {isSubmitting ? 'Sending...' : 'Send message'}
+            </Button>
+          </form>
         </div>
-      </div>
+
+        <section className="mt-16">
+          <h2 className="text-3xl font-semibold text-primary">Frequently asked questions</h2>
+          <dl className="mt-6 divide-y divide-border border-y border-border">
+            {faqs.map(({ q, a }) => (
+              <div key={q} className="grid gap-2 py-6 md:grid-cols-[1fr_2fr] md:gap-8">
+                <dt className="font-display text-xl font-semibold">{q}</dt>
+                <dd className="leading-relaxed text-muted-foreground">{a}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      </main>
     </div>
   );
 };

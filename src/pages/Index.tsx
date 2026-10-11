@@ -1,215 +1,262 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import AssessmentLanding from '@/components/AssessmentLanding';
 import QuestionCard from '@/components/QuestionCard';
 import VoiceAssessment from '@/components/VoiceAssessment';
-import AssessmentResults, { PartnerData, AssessmentResponse } from '@/components/AssessmentResults';
+import NameDialog from '@/components/NameDialog';
+import ShareInvite from '@/components/ShareInvite';
+import JointReport from '@/components/report/JointReport';
 import { assessmentQuestions } from '@/data/assessmentQuestions';
-import { generatePDFReport, generateSinglePartnerPDF } from '@/utils/pdfGenerator';
+import type { AssessmentResponse, PartnerData } from '@/lib/types';
+import {
+  SharedPayload,
+  buildInviteUrl,
+  decodePartner,
+  encodePartner,
+  readSharedPayloadFromHash,
+  reportHash,
+  setHash,
+} from '@/lib/shareLink';
+import {
+  Draft,
+  clearAll,
+  clearDraft,
+  loadDraft,
+  loadReport,
+  loadSelf,
+  saveDraft,
+  saveReport,
+  saveSelf,
+} from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 
-type AppState = 'landing' | 'assessment' | 'voice-assessment' | 'results';
-type PartnerType = 'A' | 'B' | null;
+type Screen = 'landing' | 'assessment' | 'voice' | 'sealed' | 'report';
+type Mode = 'text' | 'voice';
+type Answers = Record<number, { importance: number; flexibility: number }>;
+
+const toResponses = (answers: Answers): AssessmentResponse[] =>
+  assessmentQuestions
+    .map((q) => ({ questionId: q.id, ...(answers[q.id] ?? { importance: 0, flexibility: 0 }) }))
+    .filter((r) => r.importance > 0 && r.flexibility > 0);
+
+const toAnswers = (responses: AssessmentResponse[]): Answers =>
+  Object.fromEntries(responses.map((r) => [r.questionId, { importance: r.importance, flexibility: r.flexibility }]));
 
 const Index = () => {
-  const [appState, setAppState] = useState<AppState>('landing');
-  const [currentPartner, setCurrentPartner] = useState<PartnerType>(null);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [responses, setResponses] = useState<AssessmentResponse[]>([]);
-  const [partnerAData, setPartnerAData] = useState<PartnerData | undefined>();
-  const [partnerBData, setPartnerBData] = useState<PartnerData | undefined>();
-  const [assessmentType, setAssessmentType] = useState<'regular' | 'voice'>('regular');
   const { toast } = useToast();
+  const [screen, setScreen] = useState<Screen>('landing');
+  const [inviter, setInviter] = useState<PartnerData | null>(null);
+  const [self, setSelf] = useState<PartnerData | null>(() => loadSelf());
+  const [draft, setDraft] = useState<Draft | null>(() => loadDraft());
+  const [lastReport, setLastReport] = useState(() => loadReport());
+  const [report, setReport] = useState<{ partnerA: PartnerData; partnerB: PartnerData } | null>(null);
 
-  const startAssessment = (partner: 'A' | 'B', type: 'regular' | 'voice' = 'regular') => {
-    const partnerName = prompt(`Enter ${partner === 'A' ? 'Partner A' : 'Partner B'}'s name:`);
-    if (!partnerName?.trim()) {
-      toast({
-        title: "Name required",
-        description: "Please enter a name to continue with the assessment.",
-        variant: "destructive",
-      });
+  const [name, setName] = useState('');
+  const [answers, setAnswers] = useState<Answers>({});
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [nameDialog, setNameDialog] = useState<{ open: boolean; mode: Mode }>({ open: false, mode: 'text' });
+
+  const openReport = useCallback((partnerA: PartnerData, partnerB: PartnerData) => {
+    setReport({ partnerA, partnerB });
+    saveReport(partnerA, partnerB);
+    setLastReport({ partnerA, partnerB });
+    setHash(reportHash(partnerA, partnerB));
+    setScreen('report');
+  }, []);
+
+  const applyPayload = useCallback(
+    (payload: SharedPayload | null) => {
+      if (!payload) return false;
+      if (payload.kind === 'report') {
+        openReport(payload.partnerA, payload.partnerB);
+      } else {
+        setInviter(payload.partner);
+        setScreen('landing');
+      }
+      return true;
+    },
+    [openReport],
+  );
+
+  useEffect(() => {
+    applyPayload(readSharedPayloadFromHash());
+    const onHashChange = () => applyPayload(readSharedPayloadFromHash());
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [applyPayload]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [screen]);
+
+  useEffect(() => {
+    if (screen !== 'assessment') return;
+    const next: Draft = {
+      name,
+      responses: toResponses(answers),
+      questionIndex,
+      inviteCode: inviter ? encodePartner(inviter) : undefined,
+    };
+    saveDraft(next);
+    setDraft(next);
+  }, [screen, name, answers, questionIndex, inviter]);
+
+  const beginAssessment = (partnerName: string, mode: Mode) => {
+    setNameDialog((d) => ({ ...d, open: false }));
+    setName(partnerName);
+    setAnswers({});
+    setQuestionIndex(0);
+    setScreen(mode === 'voice' ? 'voice' : 'assessment');
+  };
+
+  const resumeDraft = () => {
+    if (!draft) return;
+    setName(draft.name);
+    setAnswers(toAnswers(draft.responses));
+    setQuestionIndex(Math.min(draft.questionIndex, assessmentQuestions.length - 1));
+    if (draft.inviteCode) setInviter(decodePartner(draft.inviteCode));
+    setScreen('assessment');
+  };
+
+  const discardDraft = () => {
+    clearDraft();
+    setDraft(null);
+  };
+
+  const finish = (responses: AssessmentResponse[]) => {
+    const partner: PartnerData = { name, responses, completedAt: new Date() };
+    clearDraft();
+    setDraft(null);
+
+    if (inviter) {
+      toast({ title: 'Both assessments are in', description: `Here is your joint report with ${inviter.name}.` });
+      openReport(inviter, partner);
       return;
     }
 
-    setCurrentPartner(partner);
-    setCurrentQuestionIndex(0);
-    setResponses([]);
-    setAssessmentType(type);
-    setAppState(type === 'voice' ? 'voice-assessment' : 'assessment');
+    saveSelf(partner);
+    setSelf(partner);
+    setHash('');
+    setScreen('sealed');
   };
 
-  const handleResponseChange = (questionId: number, field: 'importance' | 'flexibility', value: number) => {
-    setResponses(prev => {
-      const existing = prev.find(r => r.questionId === questionId);
-      if (existing) {
-        return prev.map(r => 
-          r.questionId === questionId 
-            ? { ...r, [field]: value }
-            : r
-        );
-      }
-      return [...prev, { 
-        questionId, 
-        importance: field === 'importance' ? value : 0,
-        flexibility: field === 'flexibility' ? value : 0
-      }];
-    });
+  const setAnswer = (field: 'importance' | 'flexibility', value: number) => {
+    const id = assessmentQuestions[questionIndex].id;
+    setAnswers((prev) => ({
+      ...prev,
+      [id]: { importance: 0, flexibility: 0, ...prev[id], [field]: value },
+    }));
   };
 
-  const getCurrentResponse = (questionId: number) => {
-    return responses.find(r => r.questionId === questionId) || { questionId, importance: 0, flexibility: 0 };
-  };
-
-  const goToNextQuestion = () => {
-    if (currentQuestionIndex < assessmentQuestions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+  const goNext = () => {
+    if (questionIndex < assessmentQuestions.length - 1) {
+      setQuestionIndex((i) => i + 1);
     } else {
-      completeAssessment();
+      finish(toResponses(answers));
     }
   };
 
-  const goToPreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(prev => prev - 1);
-    }
+  const startOver = () => {
+    clearAll();
+    setHash('');
+    setSelf(null);
+    setDraft(null);
+    setReport(null);
+    setLastReport(null);
+    setInviter(null);
+    setAnswers({});
+    setQuestionIndex(0);
+    setScreen('landing');
   };
 
-  const completeAssessment = () => {
-    const partnerName = prompt(`Confirm ${currentPartner === 'A' ? 'Partner A' : 'Partner B'}'s name:`);
-    if (!partnerName?.trim()) return;
-
-    const completedData: PartnerData = {
-      name: partnerName,
-      responses: responses.filter(r => r.importance > 0 && r.flexibility > 0),
-      completedAt: new Date()
-    };
-
-    if (currentPartner === 'A') {
-      setPartnerAData(completedData);
-    } else {
-      setPartnerBData(completedData);
-    }
-
-    setAppState('results');
-    setCurrentPartner(null);
-    
-    toast({
-      title: "Assessment Complete!",
-      description: `${partnerName}'s assessment has been saved successfully.`,
-    });
-  };
-
-  const restartAssessment = () => {
-    setAppState('landing');
-    setCurrentPartner(null);
-    setCurrentQuestionIndex(0);
-    setResponses([]);
-    setPartnerAData(undefined);
-    setPartnerBData(undefined);
-  };
-
-  const downloadPDF = () => {
-    if (partnerAData && partnerBData) {
-      try {
-        generatePDFReport(partnerAData, partnerBData);
-        toast({
-          title: "PDF Generated!",
-          description: "Your compatibility report has been downloaded successfully.",
-        });
-      } catch (error) {
-        toast({
-          title: "PDF Generation Failed",
-          description: "There was an error generating your report. Please try again.",
-          variant: "destructive",
-        });
-      }
-    }
-  };
-
-  const downloadSinglePartnerPDF = (partnerData: PartnerData) => {
-    try {
-      generateSinglePartnerPDF(partnerData);
+  const handlePartnerPayload = (payload: SharedPayload | null) => {
+    if (!payload) {
       toast({
-        title: "Individual Report Generated!",
-        description: `${partnerData.name}'s quality of life report has been downloaded successfully.`,
+        title: 'That link did not work',
+        description: 'Paste the full link or code your partner sent you.',
+        variant: 'destructive',
       });
-    } catch (error) {
-      toast({
-        title: "PDF Generation Failed",
-        description: "There was an error generating the report. Please try again.",
-        variant: "destructive",
-      });
+      return;
     }
+    if (payload.kind === 'invite' && self) {
+      openReport(payload.partner, self);
+      return;
+    }
+    applyPayload(payload);
   };
 
-  const handleVoiceAssessmentComplete = (voiceResponses: AssessmentResponse[]) => {
-    const partnerName = prompt(`Confirm ${currentPartner === 'A' ? 'Partner A' : 'Partner B'}'s name:`);
-    if (!partnerName?.trim()) return;
-
-    const completedData: PartnerData = {
-      name: partnerName,
-      responses: voiceResponses,
-      completedAt: new Date()
-    };
-
-    if (currentPartner === 'A') {
-      setPartnerAData(completedData);
-    } else {
-      setPartnerBData(completedData);
-    }
-
-    setAppState('results');
-    setCurrentPartner(null);
-    
-    toast({
-      title: "Voice Assessment Complete!",
-      description: `${partnerName}'s assessment has been saved successfully.`,
-    });
-  };
-
-  if (appState === 'landing') {
-    return <AssessmentLanding onStartAssessment={startAssessment} />;
+  if (screen === 'report' && report) {
+    return <JointReport partnerA={report.partnerA} partnerB={report.partnerB} onStartOver={startOver} />;
   }
 
-  if (appState === 'voice-assessment' && currentPartner) {
+  if (screen === 'sealed' && self) {
     return (
-      <VoiceAssessment
-        onComplete={handleVoiceAssessmentComplete}
-        onCancel={() => setAppState('landing')}
-        partnerType={currentPartner}
+      <ShareInvite
+        partner={self}
+        inviteUrl={buildInviteUrl(self)}
+        onPartnerLink={handlePartnerPayload}
+        onHome={() => setScreen('landing')}
       />
     );
   }
 
-  if (appState === 'assessment' && currentPartner) {
-    const currentQuestion = assessmentQuestions[currentQuestionIndex];
-    const currentResponse = getCurrentResponse(currentQuestion.id);
+  if (screen === 'voice') {
+    return (
+      <VoiceAssessment
+        partnerName={name}
+        onComplete={(responses) => finish(toResponses(toAnswers(responses)))}
+        onCancel={() => setScreen('landing')}
+      />
+    );
+  }
 
+  if (screen === 'assessment') {
+    const question = assessmentQuestions[questionIndex];
+    const current = answers[question.id] ?? { importance: 0, flexibility: 0 };
     return (
       <QuestionCard
-        question={currentQuestion}
-        currentQuestionIndex={currentQuestionIndex}
-        totalQuestions={assessmentQuestions.length}
-        importanceValue={currentResponse.importance}
-        flexibilityValue={currentResponse.flexibility}
-        onImportanceChange={(value) => handleResponseChange(currentQuestion.id, 'importance', value)}
-        onFlexibilityChange={(value) => handleResponseChange(currentQuestion.id, 'flexibility', value)}
-        onNext={goToNextQuestion}
-        onPrevious={goToPreviousQuestion}
-        canGoNext={currentResponse.importance > 0 && currentResponse.flexibility > 0}
-        canGoPrevious={currentQuestionIndex > 0}
+        question={question}
+        questionIndex={questionIndex}
+        partnerName={name}
+        answeredCount={toResponses(answers).length}
+        importance={current.importance}
+        flexibility={current.flexibility}
+        onImportanceChange={(v) => setAnswer('importance', v)}
+        onFlexibilityChange={(v) => setAnswer('flexibility', v)}
+        onNext={goNext}
+        onPrevious={() => setQuestionIndex((i) => Math.max(0, i - 1))}
+        onExit={() => setScreen('landing')}
       />
     );
   }
 
   return (
-    <AssessmentResults
-      partnerA={partnerAData}
-      partnerB={partnerBData}
-      onRestart={restartAssessment}
-      onDownloadPDF={downloadPDF}
-      onDownloadSinglePartnerPDF={downloadSinglePartnerPDF}
-    />
+    <>
+      <AssessmentLanding
+        inviter={inviter}
+        draft={draft}
+        hasSealed={!!self}
+        hasLastReport={!!lastReport}
+        canCompareWithSelf={!!inviter && !!self && encodePartner(inviter) !== encodePartner(self)}
+        onStart={(mode) => setNameDialog({ open: true, mode })}
+        onResume={resumeDraft}
+        onDiscardDraft={discardDraft}
+        onViewSealed={() => setScreen('sealed')}
+        onViewLastReport={() => lastReport && openReport(lastReport.partnerA, lastReport.partnerB)}
+        onCompareWithSelf={() => inviter && self && openReport(inviter, self)}
+        onSharedInput={handlePartnerPayload}
+        onDeclineInvite={() => {
+          setInviter(null);
+          setHash('');
+        }}
+      />
+      <NameDialog
+        open={nameDialog.open}
+        mode={nameDialog.mode}
+        inviterName={inviter?.name}
+        onOpenChange={(open) => setNameDialog((d) => ({ ...d, open }))}
+        onSubmit={(partnerName) => beginAssessment(partnerName, nameDialog.mode)}
+      />
+    </>
   );
 };
 

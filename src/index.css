@@ -1,150 +1,177 @@
-/* Love & Romance Design System - Premium Wedding Assessment */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap');
-
+/* Themeable design system. Each palette sets a few hue/saturation inputs; tokens are derived for light and dark. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root,
+  [data-theme='plum'] {
+    --p-h: 290; --p-s: 32%; --p-l: 24%;
+    --a-h: 38;  --a-s: 48%; --a-l: 50%;
+    --b-h: 38;  --b-s: 55%; --b-l: 46%;
+    --n-h: 40;  --n-s: 33%;
+    --ink-h: 282;
+  }
+
+  [data-theme='ocean'] {
+    --p-h: 194; --p-s: 58%; --p-l: 24%;
+    --a-h: 14;  --a-s: 70%; --a-l: 56%;
+    --b-h: 14;  --b-s: 68%; --b-l: 52%;
+    --n-h: 190; --n-s: 30%;
+    --ink-h: 200;
+  }
+
+  [data-theme='terracotta'] {
+    --p-h: 14;  --p-s: 50%; --p-l: 34%;
+    --a-h: 40;  --a-s: 78%; --a-l: 47%;
+    --b-h: 192; --b-s: 48%; --b-l: 36%;
+    --n-h: 32;  --n-s: 45%;
+    --ink-h: 18;
+  }
+
+  [data-theme='forest'] {
+    --p-h: 160; --p-s: 40%; --p-l: 22%;
+    --a-h: 32;  --a-s: 72%; --a-l: 50%;
+    --b-h: 28;  --b-s: 70%; --b-l: 48%;
+    --n-h: 70;  --n-s: 22%;
+    --ink-h: 160;
+  }
+
+  [data-theme='indigo'] {
+    --p-h: 232; --p-s: 44%; --p-l: 30%;
+    --a-h: 345; --a-s: 62%; --a-l: 56%;
+    --b-h: 345; --b-s: 58%; --b-l: 52%;
+    --n-h: 230; --n-s: 30%;
+    --ink-h: 232;
+  }
+
   :root {
-    /* Romantic Love Color Palette */
-    --background: 0 0% 100%; /* Pure white */
-    --foreground: 340 30% 25%; /* Deep rose-gray */
+    --background: var(--n-h) var(--n-s) 97%;
+    --foreground: var(--ink-h) 24% 14%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 340 30% 25%;
+    --card: var(--n-h) 40% 99%;
+    --card-foreground: var(--ink-h) 24% 14%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 340 30% 25%;
+    --popover: var(--n-h) 40% 99%;
+    --popover-foreground: var(--ink-h) 24% 14%;
 
-    /* Primary - Romantic Rose */
-    --primary: 340 82% 62%; /* Romantic rose pink */
-    --primary-foreground: 0 0% 100%;
-    --primary-light: 340 100% 85%;
-    --primary-lighter: 340 100% 95%;
+    --primary: var(--p-h) var(--p-s) var(--p-l);
+    --primary-foreground: var(--n-h) 33% 97%;
+    --primary-soft: var(--p-h) 26% 94%;
 
-    /* Masculine - Deep Burgundy */
-    --masculine: 350 65% 45%; /* Rich burgundy */
-    --masculine-light: 350 50% 85%;
-    --masculine-foreground: 0 0% 100%;
+    --band: var(--p-h) var(--p-s) var(--p-l);
+    --band-foreground: var(--n-h) 33% 97%;
 
-    /* Feminine - Soft Blush */
-    --feminine: 345 100% 75%; /* Soft blush pink */
-    --feminine-light: 345 100% 95%;
-    --feminine-foreground: 340 30% 25%;
-    --feminine-soft: 345 70% 98%;
+    --secondary: var(--n-h) 22% 92%;
+    --secondary-foreground: var(--ink-h) 24% 18%;
 
-    --secondary: 340 20% 93%; /* Soft rose-grey */
-    --secondary-foreground: 340 25% 30%;
+    --muted: var(--n-h) 20% 94%;
+    --muted-foreground: var(--ink-h) 8% 40%;
 
-    --muted: 340 30% 96%; /* Very light rose */
-    --muted-foreground: 340 16% 47%;
+    --accent: var(--a-h) var(--a-s) var(--a-l);
+    --accent-foreground: var(--ink-h) 24% 14%;
+    --accent-soft: var(--a-h) 60% 93%;
+    --accent-ink: var(--a-h) var(--a-s) calc(var(--a-l) - 12%);
 
-    --accent: 335 75% 60%; /* Rose gold */
-    --accent-foreground: 0 0% 100%;
+    --destructive: 12 55% 47%;
+    --destructive-foreground: 40 33% 97%;
 
-    /* Romantic Status Colors */
-    --success: 150 60% 55%; /* Soft emerald (love growing) */
-    --success-foreground: 0 0% 100%;
-    --success-light: 150 50% 95%;
+    --border: var(--n-h) 18% 86%;
+    --input: var(--n-h) 18% 82%;
+    --ring: var(--p-h) var(--p-s) 40%;
 
-    --warning: 25 90% 60%; /* Warm coral (needs attention) */
-    --warning-foreground: 0 0% 100%;
-    --warning-light: 25 100% 95%;
+    --aligned: 145 30% 36%;
+    --aligned-soft: 140 30% 92%;
+    --discuss: 36 80% 38%;
+    --discuss-soft: 42 80% 91%;
+    --priority: 8 62% 46%;
+    --priority-soft: 10 70% 94%;
+    --confirm: 215 45% 42%;
+    --confirm-soft: 215 50% 94%;
 
-    --destructive: 0 75% 58%; /* Passionate red */
-    --destructive-foreground: 0 0% 100%;
-    --destructive-light: 0 85% 97%;
+    --success: var(--aligned);
+    --success-foreground: 40 33% 97%;
+    --warning: var(--discuss);
+    --warning-foreground: 40 33% 97%;
 
-    --border: 340 20% 91%; /* Soft rose border */
-    --input: 340 20% 91%;
-    --ring: 340 82% 62%; /* Rose pink focus ring */
+    --partner-a: var(--p-h) var(--p-s) calc(var(--p-l) + 8%);
+    --partner-b: var(--b-h) var(--b-s) var(--b-l);
 
-    /* Love Compatibility Colors */
-    --compatibility-green: 150 60% 55%; /* Hearts aligned */
-    --compatibility-yellow: 25 90% 60%; /* Discussion needed */
-    --compatibility-red: 0 75% 58%; /* Priority conversation */
-    --compatibility-gray: 340 16% 47%;
-
-    /* Romantic Love Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(340 82% 62%) 0%, hsl(350 90% 70%) 30%, hsl(10 95% 75%) 60%, hsl(25 100% 80%) 100%); /* Romantic sunset: rose to coral to peach */
-    --gradient-masculine: linear-gradient(135deg, hsl(350 65% 45%) 0%, hsl(340 82% 62%) 100%); /* Burgundy to rose */
-    --gradient-feminine: linear-gradient(135deg, hsl(345 100% 75%) 0%, hsl(340 100% 95%) 100%); /* Blush to soft pink */
-    --gradient-romantic: linear-gradient(135deg, hsl(340 82% 62%) 0%, hsl(345 100% 75%) 50%, hsl(25 100% 85%) 100%); /* Rose to blush to peach */
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(340 40% 98%) 100%); /* White to soft rose */
-    --gradient-success: linear-gradient(135deg, hsl(150 60% 55%) 0%, hsl(160 65% 60%) 100%); /* Love growing */
-    --gradient-premium: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(340 100% 98%) 50%, hsl(0 0% 100%) 100%); /* Premium romantic white */
-    --gradient-overlay: linear-gradient(135deg, hsl(340 82% 62% / 0.08) 0%, hsl(25 100% 80% / 0.05) 100%); /* Soft romantic overlay */
-
-    /* Romantic Warm Shadows */
-    --shadow-card: 0 1px 3px 0 hsl(340 30% 25% / 0.06), 0 1px 2px 0 hsl(340 82% 62% / 0.04);
-    --shadow-lg: 0 10px 15px -3px hsl(340 30% 25% / 0.08), 0 4px 6px -2px hsl(340 82% 62% / 0.04);
-    --shadow-xl: 0 20px 25px -5px hsl(340 30% 25% / 0.08), 0 10px 10px -5px hsl(340 82% 62% / 0.03);
-    --shadow-premium: 0 8px 30px -12px hsl(340 82% 62% / 0.3), 0 2px 8px -2px hsl(350 90% 70% / 0.08);
-    --shadow-glow: 0 0 0 1px hsl(340 82% 62% / 0.25), 0 4px 16px 0 hsl(340 82% 62% / 0.15), 0 0 40px 0 hsl(25 100% 80% / 0.1);
-    --shadow-soft: 0 2px 4px -1px hsl(340 30% 25% / 0.04), 0 1px 2px -1px hsl(340 82% 62% / 0.03);
+    --shadow: var(--ink-h) 24% 14%;
+    --cat-s: 70%;
+    --cat-bg-l: 93%;
+    --cat-fg-l: 32%;
 
     --radius: 0.75rem;
 
-    --radius: 0.5rem;
+    --sidebar-background: var(--background);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--secondary);
+    --sidebar-accent-foreground: var(--secondary-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    color-scheme: light;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: var(--p-h) 22% 8%;
+    --foreground: var(--n-h) 25% 92%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: var(--p-h) 18% 11%;
+    --card-foreground: var(--n-h) 25% 92%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: var(--p-h) 18% 12%;
+    --popover-foreground: var(--n-h) 25% 92%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: var(--p-h) 55% 76%;
+    --primary-foreground: var(--p-h) 30% 10%;
+    --primary-soft: var(--p-h) 26% 18%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --band: var(--p-h) 32% 15%;
+    --band-foreground: var(--n-h) 25% 94%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --secondary: var(--p-h) 14% 17%;
+    --secondary-foreground: var(--n-h) 25% 92%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --muted: var(--p-h) 14% 15%;
+    --muted-foreground: var(--n-h) 10% 66%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --accent: var(--a-h) 72% 62%;
+    --accent-foreground: var(--p-h) 30% 10%;
+    --accent-soft: var(--a-h) 32% 16%;
+    --accent-ink: var(--a-h) 78% 70%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive: 10 65% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: var(--p-h) 12% 21%;
+    --input: var(--p-h) 12% 26%;
+    --ring: var(--p-h) 50% 66%;
+
+    --aligned: 145 38% 58%;
+    --aligned-soft: 145 24% 15%;
+    --discuss: 40 80% 60%;
+    --discuss-soft: 38 40% 14%;
+    --priority: 10 75% 66%;
+    --priority-soft: 10 38% 16%;
+    --confirm: 215 65% 70%;
+    --confirm-soft: 215 34% 17%;
+
+    --success-foreground: var(--p-h) 30% 10%;
+    --warning-foreground: var(--p-h) 30% 10%;
+
+    --partner-a: var(--p-h) 58% 72%;
+    --partner-b: var(--b-h) 70% 64%;
+
+    --shadow: 0 0% 0%;
+    --cat-s: 45%;
+    --cat-bg-l: 18%;
+    --cat-fg-l: 74%;
+
+    color-scheme: dark;
   }
 }
 
@@ -153,242 +180,100 @@
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
-    @apply bg-background text-foreground font-poppins antialiased;
-    background:
-      radial-gradient(ellipse at top, hsl(340 100% 98%) 0%, transparent 70%),
-      radial-gradient(ellipse at bottom right, hsl(25 100% 95%) 0%, transparent 70%),
-      radial-gradient(ellipse at bottom left, hsl(345 100% 97%) 0%, transparent 60%),
-      linear-gradient(to bottom, hsl(0 0% 100%), hsl(340 40% 99%));
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Typography Classes */
-  .font-inter {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  h1, h2, h3 {
+    @apply font-display tracking-tight;
   }
 
-  .font-poppins {
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 
-  .font-cormorant {
-    font-family: 'Cormorant Garamond', serif;
+  ::selection {
+    background: hsl(var(--accent) / 0.3);
   }
 
-  .font-great-vibes {
-    font-family: 'Great Vibes', cursive;
-  }
-
-  .font-dancing {
-    font-family: 'Dancing Script', cursive;
-  }
-
-  /* Romantic text styles */
-  .romantic-heading {
-    @apply font-dancing text-primary;
-    text-shadow: 0 2px 8px hsl(340 82% 62% / 0.15);
-  }
-
-  .romantic-title {
-    @apply font-great-vibes text-primary;
-    text-shadow: 0 2px 12px hsl(340 82% 62% / 0.2);
-  }
-
-  /* Heart decorations */
-  .heart-accent::before {
-    content: '♥';
-    color: hsl(var(--primary));
-    margin-right: 0.5rem;
-    animation: heartbeat 1.5s ease-in-out infinite;
-  }
-
-  .heart-accent::after {
-    content: '♥';
-    color: hsl(var(--primary));
-    margin-left: 0.5rem;
-    animation: heartbeat 1.5s ease-in-out infinite;
-  }
-
-  .hearts-bg {
-    position: relative;
-  }
-
-  .hearts-bg::before {
-    content: '♥ ♥ ♥';
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: hsl(var(--primary) / 0.1);
-    font-size: 2rem;
-    pointer-events: none;
-  }
-
-  @keyframes heartbeat {
-    0%, 100% {
-      transform: scale(1);
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
-    25% {
-      transform: scale(1.1);
-    }
-    50% {
-      transform: scale(1);
-    }
-  }
-
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-  }
-
-  /* Smooth animations */
-  * {
-    transition: all 0.2s ease-in-out;
-  }
-
-  *:focus {
-    outline: none;
-    box-shadow: var(--shadow-glow);
   }
 }
 
 @layer components {
-  /* Premium Gradients */
-  .gradient-hero {
-    background: var(--gradient-hero);
+  .eyebrow {
+    @apply text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-accent-ink;
   }
 
-  .gradient-masculine {
-    background: var(--gradient-masculine);
+  .surface {
+    @apply rounded-xl border border-border bg-card;
+    box-shadow: 0 1px 2px hsl(var(--shadow) / 0.05), 0 10px 30px -14px hsl(var(--shadow) / 0.14);
   }
 
-  .gradient-feminine {
-    background: var(--gradient-feminine);
+  .lift {
+    @apply transition-[transform,box-shadow] duration-300 ease-out;
+  }
+  .lift:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px hsl(var(--shadow) / 0.06), 0 18px 40px -16px hsl(var(--shadow) / 0.28);
   }
 
-  .gradient-romantic {
-    background: var(--gradient-romantic);
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent;
   }
 
-  .gradient-card {
-    background: var(--gradient-card);
+  .paper {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(60rem 30rem at 85% -10%, hsl(var(--accent) / 0.12), transparent 60%),
+      radial-gradient(50rem 30rem at -10% 10%, hsl(var(--primary) / 0.08), transparent 60%);
   }
 
-  .gradient-premium {
-    background: var(--gradient-premium);
+  .mesh {
+    background-image:
+      radial-gradient(40rem 22rem at 0% 0%, hsl(var(--primary) / 0.16), transparent 60%),
+      radial-gradient(36rem 22rem at 100% 0%, hsl(var(--accent) / 0.2), transparent 60%),
+      radial-gradient(30rem 20rem at 60% 120%, hsl(var(--partner-b) / 0.12), transparent 60%);
   }
 
-  .gradient-overlay {
-    background: var(--gradient-overlay);
+  .brand-gradient {
+    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--partner-a)) 55%, hsl(var(--accent)));
   }
 
-  /* Refined Shadows */
-  .shadow-card {
-    box-shadow: var(--shadow-card);
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(100deg, hsl(var(--primary)), hsl(var(--accent)));
   }
 
-  .shadow-lg-custom {
-    box-shadow: var(--shadow-lg);
+  .orb {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
   }
 
-  .shadow-xl-custom {
-    box-shadow: var(--shadow-xl);
+  .icon-tile {
+    @apply inline-flex shrink-0 items-center justify-center rounded-xl;
   }
 
-  .shadow-premium {
-    box-shadow: var(--shadow-premium);
+  .cat-tile {
+    background-color: hsl(var(--cat-h) var(--cat-s) var(--cat-bg-l));
+    color: hsl(var(--cat-h) var(--cat-s) var(--cat-fg-l));
   }
 
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
+  .status-chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium;
   }
-
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
-  }
-
-  /* Premium Card Styles */
-  .card-premium {
-    @apply bg-white border border-border shadow-card backdrop-blur-sm relative overflow-hidden;
-  }
-
-  .card-premium::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: var(--gradient-romantic);
-    opacity: 0.3;
-  }
-
-  /* Elegant Buttons */
-  .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-premium;
-  }
-
-  .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-soft;
-  }
-
-  /* Rating Buttons */
-  .rating-button {
-    @apply w-full p-4 text-left rounded-xl border border-border bg-white hover:border-primary hover:shadow-soft transition-all duration-200 relative overflow-hidden;
-  }
-
-  .rating-button-selected {
-    @apply border-primary shadow-premium bg-gradient-to-r from-primary to-primary/90 text-white;
-  }
-
-  .rating-button-selected::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-top: 20px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .compatibility-green {
-    color: hsl(var(--compatibility-green));
-  }
-
-  .compatibility-yellow {
-    color: hsl(var(--compatibility-yellow));
-  }
-
-  .compatibility-red {
-    color: hsl(var(--compatibility-red));
-  }
-
-  .bg-compatibility-green {
-    background-color: hsl(var(--compatibility-green));
-  }
-
-  .bg-compatibility-yellow {
-    background-color: hsl(var(--compatibility-yellow));
-  }
-
-  .bg-compatibility-red {
-    background-color: hsl(var(--compatibility-red));
-  }
-
-  .bg-compatibility-green-light {
-    background-color: hsl(var(--success-light));
-  }
-
-  .bg-compatibility-yellow-light {
-    background-color: hsl(var(--warning-light));
-  }
-
-  .bg-compatibility-red-light {
-    background-color: hsl(var(--destructive-light));
-  }
+  .status-aligned { @apply bg-aligned-soft text-aligned; }
+  .status-discuss { @apply bg-discuss-soft text-discuss; }
+  .status-priority { @apply bg-priority-soft text-priority; }
+  .status-confirm { @apply bg-confirm-soft text-confirm; }
 }

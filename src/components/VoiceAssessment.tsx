@@ -1,19 +1,46 @@
 import { useState, useEffect, useRef } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mic, MicOff, Volume2, VolumeX, AlertTriangle } from "lucide-react";
-import { assessmentQuestions } from '@/data/assessmentQuestions';
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { Mic, MicOff, Volume2, VolumeX, AlertTriangle, Loader2 } from "lucide-react";
+import CategoryIcon from '@/components/CategoryIcon';
+import SiteHeader from '@/components/SiteHeader';
+import { assessmentQuestions, flexibilityLabels, importanceLabels } from '@/data/assessmentQuestions';
 import { useToast } from "@/hooks/use-toast";
+import { cn } from '@/lib/utils';
 
 interface VoiceAssessmentProps {
   onComplete: (responses: { questionId: number; importance: number; flexibility: number; }[]) => void;
   onCancel: () => void;
-  partnerType: 'A' | 'B';
+  partnerName: string;
 }
 
-const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentProps) => {
+const VoiceShell = ({ onCancel, children }: { onCancel: () => void; children: React.ReactNode }) => (
+  <div className="paper flex min-h-screen flex-col">
+    <SiteHeader
+      right={
+        <Button variant="ghost" size="sm" onClick={onCancel}>
+          Exit
+        </Button>
+      }
+    />
+    <main className="container flex flex-1 items-center justify-center py-12">{children}</main>
+  </div>
+);
+
+const ScaleHint = ({ labels, active, title }: { labels: string[]; active: boolean; title: string }) => (
+  <div className={cn('rounded-lg border p-4 transition-colors', active ? 'border-primary bg-primary-soft' : 'border-border')}>
+    <p className="text-xs font-semibold uppercase tracking-wider text-primary">{title}</p>
+    <ol className="mt-2 space-y-0.5 text-sm text-muted-foreground">
+      {labels.map((label, i) => (
+        <li key={label}>
+          <span className="mr-2 font-display text-base font-semibold text-foreground">{i + 1}</span>
+          {label}
+        </li>
+      ))}
+    </ol>
+  </div>
+);
+
+const VoiceAssessment = ({ onComplete, onCancel, partnerName }: VoiceAssessmentProps) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<{ questionId: number; importance: number; flexibility: number; }[]>([]);
   const [currentMode, setCurrentMode] = useState<'listening' | 'importance' | 'flexibility' | 'next'>('listening');
@@ -39,9 +66,9 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
     }
 
     // Initialize speech recognition
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
+    const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognitionCtor) {
+      recognitionRef.current = new SpeechRecognitionCtor();
       
       if (recognitionRef.current) {
         recognitionRef.current.continuous = false;
@@ -285,167 +312,131 @@ const VoiceAssessment = ({ onComplete, onCancel, partnerType }: VoiceAssessmentP
 
   if (isInitializing) {
     return (
-      <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle className="text-center">Initializing Voice Features</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-            <p>Setting up voice recognition and text-to-speech...</p>
-          </CardContent>
-        </Card>
-      </div>
+      <VoiceShell onCancel={onCancel}>
+        <div className="surface max-w-md p-10 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
+          <h1 className="mt-5 text-3xl font-semibold text-primary">Preparing voice mode</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Setting up speech recognition and text-to-speech.</p>
+        </div>
+      </VoiceShell>
     );
   }
 
   if (!speechSupported || !recognitionSupported) {
     return (
-      <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle className="text-center flex items-center justify-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-destructive" />
-              Voice Assessment Not Available
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <div className="space-y-2">
-              <p>Your browser doesn't support voice features:</p>
-              <ul className="text-sm text-muted-foreground space-y-1">
-                {!speechSupported && <li>• Text-to-speech not supported</li>}
-                {!recognitionSupported && <li>• Speech recognition not supported</li>}
-              </ul>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <p>Try using Chrome, Safari, or Edge for the best voice experience.</p>
-            </div>
-            <Button onClick={onCancel}>Return to Regular Assessment</Button>
-          </CardContent>
-        </Card>
-      </div>
+      <VoiceShell onCancel={onCancel}>
+        <div className="surface max-w-md p-10 text-center">
+          <AlertTriangle className="mx-auto h-8 w-8 text-priority" />
+          <h1 className="mt-5 text-3xl font-semibold text-primary">Voice mode is not available here</h1>
+          <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
+            {!speechSupported && <li>This browser does not support text-to-speech.</li>}
+            {!recognitionSupported && <li>This browser does not support speech recognition.</li>}
+          </ul>
+          <p className="mt-3 text-sm text-muted-foreground">Chrome, Edge or Safari give the best voice experience.</p>
+          <Button className="mt-6" onClick={onCancel}>
+            Use the written assessment
+          </Button>
+        </div>
+      </VoiceShell>
     );
   }
 
   if (!permissionGranted) {
     return (
-      <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle className="text-center">Microphone Permission Required</CardTitle>
-          </CardHeader>
-          <CardContent className="text-center space-y-4">
-            <div className="space-y-2">
-              <Mic className="w-12 h-12 mx-auto text-muted-foreground" />
-              <p>Voice assessment requires microphone access to hear your responses.</p>
-              <p className="text-sm text-muted-foreground">
-                Your privacy is protected - audio is only processed locally and never stored.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Button onClick={checkPermissionsAndInitialize}>Grant Microphone Access</Button>
-              <Button onClick={onCancel} variant="outline">Use Regular Assessment Instead</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <VoiceShell onCancel={onCancel}>
+        <div className="surface max-w-md p-10 text-center">
+          <span className="icon-tile brand-gradient mx-auto h-16 w-16 rounded-2xl text-primary-foreground shadow-lg">
+            <Mic className="h-8 w-8" />
+          </span>
+          <h1 className="mt-5 text-3xl font-semibold text-primary">Allow microphone access</h1>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+            Voice mode needs your microphone to hear your ratings. Speech is handled by your browser and nothing is
+            recorded or stored.
+          </p>
+          <div className="mt-6 flex flex-col gap-2">
+            <Button onClick={checkPermissionsAndInitialize}>Allow microphone</Button>
+            <Button onClick={onCancel} variant="ghost">
+              Use the written assessment instead
+            </Button>
+          </div>
+        </div>
+      </VoiceShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-romantic flex items-center justify-center p-4">
-      <Card className="max-w-2xl w-full shadow-lg">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="text-2xl">
-                Voice Assessment - Partner {partnerType}
-              </CardTitle>
-              <Badge variant="secondary" className="mt-2">
-                Question {currentQuestionIndex + 1} of {assessmentQuestions.length}
-              </Badge>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-muted-foreground">Progress</div>
-              <div className="text-lg font-semibold">{Math.round(progress)}%</div>
-            </div>
-          </div>
-          <Progress value={progress} className="mt-4" />
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold mb-4">{currentQuestion?.question}</h3>
-            <p className="text-sm text-muted-foreground mb-4">Category: {currentQuestion?.category}</p>
-            
-            {currentMode === 'importance' && (
-              <p className="text-sm bg-masculine-light p-3 rounded-lg">
-                Rate the importance (1-5): 1 = Not important, 5 = Extremely important
-              </p>
-            )}
-            
-            {currentMode === 'flexibility' && (
-              <p className="text-sm bg-feminine-light p-3 rounded-lg">
-                Rate your flexibility (1-5): 1 = Very flexible, 5 = Non-negotiable
-              </p>
-            )}
+    <VoiceShell onCancel={onCancel}>
+      <div className="w-full max-w-3xl">
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <p>
+            <span className="eyebrow mr-2">Voice mode</span>
+            {partnerName}
+          </p>
+          <p>
+            Question {currentQuestionIndex + 1} of {assessmentQuestions.length}
+          </p>
+        </div>
+        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-border">
+          <div className="brand-gradient h-full transition-[width] duration-500" style={{ width: `${progress}%` }} />
+        </div>
+
+        <section key={currentQuestion?.id} className="surface mt-8 animate-fade-up p-6 md:p-10">
+          {currentQuestion && (
+            <p className="flex items-center gap-2.5">
+              <CategoryIcon category={currentQuestion.category} size="sm" />
+              <span className="eyebrow">{currentQuestion.category}</span>
+            </p>
+          )}
+          <h1 className="mt-3 text-3xl font-semibold leading-tight md:text-4xl">{currentQuestion?.question}</h1>
+          {currentQuestion?.explanation && (
+            <p className="mt-3 text-muted-foreground">{currentQuestion.explanation}</p>
+          )}
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <ScaleHint title="Say your importance" labels={importanceLabels} active={currentMode === 'importance'} />
+            <ScaleHint title="Then your flexibility" labels={flexibilityLabels} active={currentMode === 'flexibility'} />
           </div>
 
-          <div className="flex justify-center space-x-4">
-            <Button
+          <div className="mt-8 flex flex-col items-center gap-4">
+            <button
+              type="button"
               onClick={isListening ? stopListening : startListening}
-              variant={isListening ? "destructive" : "default"}
-              size="lg"
-              className="flex items-center gap-2"
+              aria-pressed={isListening}
+              aria-label={isListening ? 'Stop listening' : 'Start speaking'}
+              className={cn(
+                'relative flex h-20 w-20 items-center justify-center rounded-full text-primary-foreground shadow-lg transition-colors',
+                isListening ? 'bg-priority' : 'brand-gradient hover:scale-105',
+              )}
             >
-              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-              {isListening ? "Stop Listening" : "Start Speaking"}
-            </Button>
-            
-            <Button
-              onClick={toggleSpeaking}
-              variant="outline"
-              size="lg"
-              className="flex items-center gap-2"
-            >
-              {speaking ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-              {speaking ? "Stop Audio" : "Repeat Question"}
+              {isListening && <span className="absolute inset-0 animate-ping rounded-full bg-priority/30" />}
+              {isListening ? <MicOff className="h-7 w-7" /> : <Mic className="h-7 w-7" />}
+            </button>
+            <p className="text-sm text-muted-foreground" aria-live="polite">
+              {isListening
+                ? 'Listening... say a number from 1 to 5'
+                : speaking
+                  ? 'Reading the question aloud...'
+                  : 'Tap the microphone and say a number from 1 to 5'}
+            </p>
+            <Button onClick={toggleSpeaking} variant="ghost" size="sm">
+              {speaking ? <VolumeX className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />}
+              {speaking ? 'Stop audio' : 'Repeat question'}
             </Button>
           </div>
+        </section>
 
-          {isListening && (
-            <div className="text-center">
-              <div className="animate-pulse text-green-600">
-                🎤 Listening...
-              </div>
-            </div>
-          )}
-
-          {speaking && (
-            <div className="text-center">
-              <div className="animate-pulse text-blue-600">
-                🔊 Playing audio...
-              </div>
-            </div>
-          )}
-
-          <div className="flex justify-between">
-            <Button onClick={onCancel} variant="outline">
-              Cancel Assessment
+        <div className="mt-6 flex justify-between">
+          <Button onClick={onCancel} variant="ghost">
+            Exit voice mode
+          </Button>
+          {currentQuestionIndex > 0 && (
+            <Button onClick={() => setCurrentQuestionIndex((prev) => prev - 1)} variant="outline">
+              Previous question
             </Button>
-            
-            {currentQuestionIndex > 0 && (
-              <Button 
-                onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                variant="outline"
-              >
-                Previous Question
-              </Button>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          )}
+        </div>
+      </div>
+    </VoiceShell>
   );
 };
 
